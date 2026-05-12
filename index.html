@@ -269,15 +269,15 @@
         .counter-item h4 { font-size: 3.5rem; font-weight: 900; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .counter-item p { font-size: 1rem; margin-top: 8px; letter-spacing: 1px; font-weight: 600; }
 
-        /* FULL WIDTH SLIDER - COVER MODE */
+        /* FULL SCREEN HIGH QUALITY SLIDER */
         .hero-slider {
             position: relative;
             width: 100%;
-            height: 85vh;
-            min-height: 500px;
-            max-height: 750px;
+            height: 90vh;
+            min-height: 550px;
+            max-height: 800px;
             overflow: hidden;
-            background: #1a1a1a;
+            background: #000;
             margin: 0 auto;
         }
         
@@ -295,9 +295,6 @@
             height: 100%;
             opacity: 0;
             transition: opacity 1.2s ease-in-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             background: #1a1a1a;
         }
         
@@ -306,13 +303,43 @@
             z-index: 2;
         }
         
+        /* HIGH QUALITY IMAGE SETTINGS */
         .hero-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
+            object-position: center center;
             display: block;
             cursor: pointer;
+            image-rendering: auto;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+        }
+        
+        /* Text Overlay on Slider */
+        .slider-overlay {
+            position: absolute;
+            bottom: 30%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 15;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.6), transparent);
+            padding: 20px;
+        }
+        
+        .slider-overlay h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+        }
+        
+        .slider-overlay p {
+            font-size: 1.3rem;
+            font-weight: 500;
         }
         
         .slider-nav-btn {
@@ -377,6 +404,9 @@
             text-align: center;
             z-index: 10;
             color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 20px 40px;
+            border-radius: 20px;
         }
         
         .spinner-custom {
@@ -606,7 +636,7 @@
         
         .footer-grid h4 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.2rem; }
         
-        .social-icons-side { display: flex; gap: 18px; margin-top: 15px; }
+        .social-icons-side { display: flex; gap: 18px; margin-top: 15px; flex-wrap: wrap; }
         .social-icons-side a { color: #f5e6dc; font-size: 1.5rem; transition: 0.3s; }
         .social-icons-side a:hover { color: var(--accent-gold); transform: translateY(-4px); }
 
@@ -722,7 +752,9 @@
             .main-header h1 { font-size: 1.2rem; }
             .main-header img { width: 45px; height: 45px; }
             .welcome-text { font-size: 1.8rem; }
-            .hero-slider { height: 45vh; min-height: 300px; }
+            .hero-slider { height: 50vh; min-height: 350px; }
+            .slider-overlay h2 { font-size: 1.5rem; }
+            .slider-overlay p { font-size: 0.9rem; }
             section { padding: 25px 15px; margin: 30px auto; }
             .counter-item h4 { font-size: 2.5rem; }
             nav a { font-size: 0.75rem; }
@@ -732,7 +764,7 @@
         }
         
         @media (max-width: 480px) {
-            .hero-slider { height: 35vh; min-height: 250px; }
+            .hero-slider { height: 40vh; min-height: 280px; }
             .slider-nav-btn { width: 35px; height: 35px; font-size: 16px; }
         }
     </style>
@@ -777,7 +809,7 @@
 </div>
 <div class="header-spacer" id="headerSpacer"></div>
 
-<!-- FULL WIDTH SLIDER - COVER MODE (FULL IMAGE) -->
+<!-- FULL SCREEN HIGH QUALITY SLIDER -->
 <div class="hero-slider" id="heroSlider">
     <div class="hero-slider-container" id="sliderContainer">
         <div class="slider-loading" id="sliderLoading">
@@ -838,7 +870,7 @@
 <section id="gallery">
     <h3>📸 School Gallery</h3>
     <div class="gallery-tabs">
-        <div class="gallery-tab active" data-filter="all">All</div>
+        <div class="gallery-tab active" data-filter="all">All Photos</div>
         <div class="gallery-tab" data-filter="tour">Tour</div>
         <div class="gallery-tab" data-filter="extracurricular">Activities</div>
         <div class="gallery-tab" data-filter="picnic">Picnic</div>
@@ -854,9 +886,9 @@
     <h3>📊 Performance Analytics</h3>
     <div class="chart-container"><canvas id="performanceChart"></canvas></div>
     <div>
-        <button class="chart-btn active" data-chart="bar">Bar</button>
-        <button class="chart-btn" data-chart="line">Line</button>
-        <button class="chart-btn" data-chart="pie">Pie</button>
+        <button class="chart-btn active" data-chart="bar">Bar Chart</button>
+        <button class="chart-btn" data-chart="line">Line Chart</button>
+        <button class="chart-btn" data-chart="pie">Pie Chart</button>
     </div>
 </section>
 
@@ -902,8 +934,23 @@
 <!-- FOOTER -->
 <footer id="footer">
     <div class="footer-grid">
-        <div><h4>Quick Links</h4><ul><li><a href="#" style="color:#f5e6dc">Home</a></li><li><a href="#about" style="color:#f5e6dc">About</a></li><li><a href="#admissions" style="color:#f5e6dc">Admissions</a></li></ul></div>
-        <div><h4>Krish Model School</h4><p>Kamala Mun.-03, Lagma, Dhanusha</p><div class="social-icons-side"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a></div></div>
+        <div><h4>Quick Links</h4><ul><li><a href="#" style="color:#f5e6dc">Home</a></li><li><a href="#about" style="color:#f5e6dc">About Us</a></li><li><a href="#admissions" style="color:#f5e6dc">Admissions</a></li><li><a href="#events" style="color:#f5e6dc">Events</a></li><li><a href="#gallery" style="color:#f5e6dc">Gallery</a></li><li><a href="#leadership" style="color:#f5e6dc">Leadership</a></li></ul></div>
+        <div>
+            <h4>Krish Model School</h4>
+            <p>Kamala Mun.-03, Lagma, Dhanusha</p>
+            <div class="social-icons-side">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+                <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
         <div><h4>Contact</h4><p><i class="fas fa-phone"></i> +977 9824863245</p><p><i class="fas fa-envelope"></i> info@krishmodel.edu</p></div>
         <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.123!2d85.8942!3d26.9907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ec730c26f36c9f%3A0xc3d2f9a403167469!2sEverest%20Public%20School!5e0!3m2!1sen!2snp!4v1715000000000!5m2!1sen!2snp" width="100%" height="140" style="border-radius:16px;"></iframe></div>
     </div>
@@ -951,7 +998,6 @@
     let sliderInterval = null;
     let currentSlideIndex = 0;
 
-    // Header Functions
     function updateHeaderSpacer() {
         const header = document.querySelector('.fixed-header');
         const spacer = document.getElementById('headerSpacer');
@@ -994,11 +1040,11 @@
                 });
                 allSliderImages.sort((a,b) => a.order - b.order);
             } else {
-                // Default fallback images
+                // Default high-quality fallback images
                 allSliderImages = [
-                    { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome" },
+                    { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome to Krish Model School" },
                     { url: "https://placehold.co/1920x800/5C0000/white?text=Quality+Education", title: "Quality Education" },
-                    { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open", title: "Admissions Open" }
+                    { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open+2081", title: "ADMISSION OPEN for Academic Year 2081" }
                 ];
             }
             
@@ -1008,9 +1054,9 @@
             console.error("Slider error:", err);
             document.getElementById('sliderLoading').style.display = 'none';
             allSliderImages = [
-                { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome" },
+                { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome to Krish Model School" },
                 { url: "https://placehold.co/1920x800/5C0000/white?text=Quality+Education", title: "Quality Education" },
-                { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open", title: "Admissions Open" }
+                { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open+2081", title: "ADMISSION OPEN for Academic Year 2081" }
             ];
             renderSlider();
         });
@@ -1038,6 +1084,10 @@
             const imgEl = document.createElement('img');
             imgEl.src = img.url;
             imgEl.alt = img.title || 'School Image';
+            imgEl.loading = 'eager';
+            imgEl.style.width = '100%';
+            imgEl.style.height = '100%';
+            imgEl.style.objectFit = 'cover';
             imgEl.onerror = function() { 
                 this.src = 'https://placehold.co/1920x800/8B0000/white?text=Image+Not+Found';
             };
