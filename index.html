@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Krish Model School - Official Website</title>
+    
+    <link rel="icon" type="image/png" href="Gemini_Generated_Image_dbc12vdbc12vdbc1.png">
+    <link rel="apple-touch-icon" href="Gemini_Generated_Image_dbc12vdbc12vdbc1.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --dark-red: #8B0000;
+            --dark-red-dark: #5C0000;
+            --accent-gold: #DAA520;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            color: #2c1810;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8e0 100%);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('Gemini_Generated_Image_dbc12vdbc12vdbc1.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 600px auto;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(139,0,0,0.4); } 70% { box-shadow: 0 0 0 15px rgba(139,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(139,0,0,0); } }
+        
+        #welcomeLightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .welcome-container {
+            background: linear-gradient(145deg, #fff8f5, #fff0ea);
+            border-radius: 40px;
+            box-shadow: 0 50px 120px rgba(139,0,0,0.5), 0 0 0 2px rgba(218,165,32,0.3);
+            padding: 50px 70px;
+            text-align: center;
+            max-width: 750px;
+            width: 90%;
+            border: 2px solid var(--accent-gold);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .welcome-text {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8B0000, #DAA520);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #5C0000;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .welcome-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-gold);
+            padding: 6px;
+            background: white;
+            animation: pulseGlow 2s infinite;
+            object-fit: cover;
+        }
+
+        .welcome-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(145deg, #8B0000, #5C0000);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .welcome-close-btn:hover { transform: scale(1.1) rotate(90deg); background: var(--accent-gold); }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10000;
+            transition: all 0.3s ease;
+        }
+        
+        .main-header {
+            background: linear-gradient(135deg, #5C0000, #8B0000);
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .main-header.shrink { padding: 8px 20px; }
+        .main-header.shrink img { width: 45px; height: 45px; }
+        .main-header.shrink h1 { font-size: 1.3rem; margin: 5px 0; }
+        .main-header.shrink p { display: none; }
+        
+        .main-header img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-gold);
+            object-fit: cover;
+            background: white;
+            padding: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .main-header h1 {
+            font-size: 1.8rem;
+            margin: 5px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .main-header p { font-size: 0.85rem; opacity: 0.95; margin: 0; }
+        
+        .header-top { display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; }
+
+        .sticky-nav {
+            background: #fffef7;
+            padding: 10px 20px;
+            box-shadow: 0 5px 20px rgba(139,0,0,0.15);
+            border-bottom: 3px solid var(--accent-gold);
+        }
+        
+        .header-spacer { height: 0; transition: height 0.3s ease; }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        nav .nav-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        
+        nav a {
+            color: #5C0000;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        nav a:hover { color: var(--accent-gold); transform: translateY(-2px); }
+        
+        .nav-apply-btn {
+            background: linear-gradient(145deg, #8B0000, #5C0000);
+            color: white !important;
+            padding: 6px 20px;
+            border-radius: 50px;
+            box-shadow: 0 3px 10px rgba(139,0,0,0.3);
+        }
+
+        section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 30px;
+            box-shadow: 0 20px 45px rgba(139,0,0,0.1);
+            width: 95%;
+            border: 1px solid rgba(218,165,32,0.2);
+        }
+        
+        .section-hidden { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1); }
+        .section-visible { opacity: 1; transform: translateY(0); }
+        
+        h3 {
+            color: #5C0000;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            font-weight: 800;
+        }
+        
+        h3::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), #8B0000);
+            bottom: -10px;
+            left: 0;
+            border-radius: 4px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+            text-align: center;
+        }
+        
+        .value-item {
+            background: #fffaf5;
+            padding: 20px 12px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            border: 1px solid #ffe0cc;
+        }
+        
+        .value-item:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(139,0,0,0.1); border-color: var(--accent-gold); }
+        .value-item i { font-size: 2.5rem; color: #8B0000; margin-bottom: 12px; }
+        .value-item strong { color: #5C0000; font-size: 1.1rem; display: block; margin-bottom: 6px; }
+
+        .counter-section {
+            background: linear-gradient(135deg, #8B0000, #5C0000);
+            color: white;
+            text-align: center;
+            padding: 50px 25px;
+            border-radius: 45px;
+        }
+        
+        .counter-grid { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; }
+        .counter-item h4 { font-size: 3.5rem; font-weight: 900; margin: 0; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        .counter-item p { font-size: 1rem; margin-top: 8px; letter-spacing: 1px; font-weight: 600; }
+
+        /* FULL WIDTH SLIDER - COVER MODE */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 85vh;
+            min-height: 500px;
+            max-height: 750px;
+            overflow: hidden;
+            background: #1a1a1a;
+            margin: 0 auto;
+        }
+        
+        .hero-slider-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+        }
+        
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            cursor: pointer;
+        }
+        
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(139,0,0,0.7);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            border: 2px solid var(--accent-gold);
+            font-size: 28px;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-nav-btn:hover {
+            background: var(--accent-gold);
+            color: #5C0000;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .slider-nav-prev { left: 20px; }
+        .slider-nav-next { right: 20px; }
+        
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            z-index: 20;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--accent-gold);
+        }
+        
+        .slider-dot.active {
+            background: var(--accent-gold);
+            transform: scale(1.2);
+        }
+        
+        .slider-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            color: white;
+        }
+        
+        .spinner-custom {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .event-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .event-item {
+            display: flex;
+            background: #fffbf7;
+            border-radius: 18px;
+            padding: 18px;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #8B0000;
+        }
+        
+        .event-date {
+            background: #8B0000;
+            color: white;
+            padding: 10px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 75px;
+            margin-right: 15px;
+        }
+        
+        .event-date span { font-size: 1.8rem; font-weight: 900; display: block; line-height: 1; }
+
+        .staff-grid { display: flex; justify-content: center; gap: 35px; flex-wrap: wrap; }
+        
+        .staff-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            text-align: center;
+            max-width: 320px;
+            box-shadow: 0 15px 30px rgba(139,0,0,0.1);
+            transition: 0.3s;
+            border: 1px solid #ffd8c4;
+        }
+        
+        .staff-card:hover { transform: translateY(-8px); border-color: var(--accent-gold); }
+        .staff-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #8B0000;
+            margin-bottom: 15px;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-tab {
+            padding: 6px 18px;
+            border-radius: 40px;
+            background: #fff0e8;
+            cursor: pointer;
+            font-weight: 600;
+            color: #5C0000;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+        
+        .gallery-tab.active, .gallery-tab:hover { background: #8B0000; color: white; }
+        
+        #galleryGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+        
+        .gallery-item {
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            background: #f9f9f9;
+        }
+        
+        .gallery-item img { 
+            width: 100%; 
+            height: 220px; 
+            object-fit: cover; 
+            transition: 0.4s;
+        }
+        .gallery-item:hover { transform: scale(1.02); box-shadow: 0 15px 30px rgba(139,0,0,0.2); }
+        .gallery-item:hover img { transform: scale(1.05); }
+        
+        .gallery-btn {
+            display: block;
+            padding: 10px 30px;
+            background: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 45px;
+            margin: 25px auto 0;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .gallery-btn:hover { background: var(--accent-gold); color: #5C0000; }
+
+        .chart-container { height: 420px; margin: 30px 0; }
+        
+        .chart-btn {
+            padding: 8px 20px;
+            background: #fff0e8;
+            border: 2px solid #8B0000;
+            border-radius: 35px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        
+        .chart-btn.active, .chart-btn:hover { background: #8B0000; color: white; }
+
+        .admission-section-content { display: flex; gap: 40px; flex-wrap: wrap; }
+        .admission-info-left { flex: 1; min-width: 280px; }
+        .admission-image-right { flex: 1; text-align: center; }
+        
+        .admission-image-right img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(139,0,0,0.2);
+            border: 3px solid var(--accent-gold);
+        }
+        
+        .apply-btn {
+            background: linear-gradient(145deg, #8B0000, #5C0000);
+            color: white;
+            padding: 14px 45px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(139,0,0,0.4);
+        }
+        
+        .apply-btn:hover { transform: scale(1.03); background: var(--accent-gold); color: #5C0000; }
+        
+        #admissionFormWrapper {
+            display: none;
+            margin-top: 35px;
+            background: #fffbf7;
+            padding: 25px;
+            border-radius: 35px;
+        }
+        
+        #admissionFormWrapper.open { display: block; animation: fadeIn 0.4s; }
+        
+        .close-form-btn {
+            background: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 6px 18px;
+            float: right;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .upload-field {
+            border: 2px dashed #8B0000;
+            padding: 20px;
+            text-align: center;
+            border-radius: 18px;
+            cursor: pointer;
+            background: #fff5f0;
+        }
+        
+        .admission-submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #8B0000;
+            color: white;
+            border: none;
+            border-radius: 45px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        #footer {
+            background: #2c1810;
+            color: #f5e6dc;
+            padding: 50px 20px 25px;
+            margin-top: 40px;
+        }
+        
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-grid h4 { color: var(--accent-gold); margin-bottom: 20px; font-size: 1.2rem; }
+        
+        .social-icons-side { display: flex; gap: 18px; margin-top: 15px; }
+        .social-icons-side a { color: #f5e6dc; font-size: 1.5rem; transition: 0.3s; }
+        .social-icons-side a:hover { color: var(--accent-gold); transform: translateY(-4px); }
+
+        #lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.96);
+            z-index: 100000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #lightbox-img { 
+            max-width: 95%; 
+            max-height: 95vh; 
+            border-radius: 10px; 
+            border: 3px solid var(--accent-gold);
+            object-fit: contain;
+        }
+        
+        .close-lightbox { 
+            position: absolute; 
+            top: 20px; 
+            right: 30px; 
+            color: white; 
+            font-size: 45px; 
+            cursor: pointer;
+            z-index: 100001;
+        }
+        
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+            z-index: 100001;
+        }
+        
+        .lightbox-nav-btn {
+            background: rgba(139,0,0,0.7);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--accent-gold);
+            font-size: 24px;
+            transition: 0.3s;
+        }
+        
+        .lightbox-nav-btn:hover { background: var(--accent-gold); color: #5C0000; }
+
+        #scrollTopBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #8B0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9999;
+            border: 2px solid var(--accent-gold);
+            font-size: 22px;
+        }
+        
+        #translatorBtn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: #8B0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid var(--accent-gold);
+            font-size: 22px;
+            z-index: 9998;
+        }
+        
+        #currentLanguage {
+            position: fixed;
+            bottom: 25px;
+            right: 95px;
+            background: rgba(44,24,16,0.9);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            z-index: 9997;
+            backdrop-filter: blur(5px);
+        }
+        
+        @media (max-width: 768px) {
+            .main-header h1 { font-size: 1.2rem; }
+            .main-header img { width: 45px; height: 45px; }
+            .welcome-text { font-size: 1.8rem; }
+            .hero-slider { height: 45vh; min-height: 300px; }
+            section { padding: 25px 15px; margin: 30px auto; }
+            .counter-item h4 { font-size: 2.5rem; }
+            nav a { font-size: 0.75rem; }
+            .slider-nav-btn { width: 40px; height: 40px; font-size: 20px; }
+            .slider-nav-prev { left: 10px; }
+            .slider-nav-next { right: 10px; }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-slider { height: 35vh; min-height: 250px; }
+            .slider-nav-btn { width: 35px; height: 35px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- WELCOME LIGHTBOX -->
+<div id="welcomeLightbox">
+    <button class="welcome-close-btn" id="closeWelcomeBtn">✕</button>
+    <div class="welcome-container">
+        <img src="Gemini_Generated_Image_dbc12vdbc12vdbc1.png" alt="Logo" class="welcome-logo">
+        <h1 class="welcome-text">Krish Model School</h1>
+        <p class="welcome-subtitle">Kamala Mun.-03, Lagma (Dhanusha) | Excellence in Education</p>
+        <p>✨ Quality Education · Holistic Growth · Bright Future ✨</p>
+    </div>
+</div>
+
+<!-- FIXED HEADER -->
+<div class="fixed-header">
+    <div class="main-header" id="mainHeader">
+        <div class="header-top">
+            <img src="Gemini_Generated_Image_dbc12vdbc12vdbc1.png" alt="School Logo">
+            <div>
+                <h1>Krish Model School</h1>
+                <p>Kamala Mun.-03, Lagma (Dhanusha), Nepal</p>
+            </div>
+        </div>
+    </div>
+    <div class="sticky-nav">
+        <nav>
+            <div class="nav-links">
+                <a href="#">🏠 Home</a>
+                <a href="#about">📖 About Us</a>
+                <a href="#admissions">📝 Admissions</a>
+                <a href="#events">📅 Events</a>
+                <a href="#gallery">🖼️ Gallery</a>
+                <a href="#leadership">👑 Leadership</a>
+            </div>
+            <a href="#admissions" class="nav-apply-btn">✨ APPLY NOW</a>
+        </nav>
+    </div>
+</div>
+<div class="header-spacer" id="headerSpacer"></div>
+
+<!-- FULL WIDTH SLIDER - COVER MODE (FULL IMAGE) -->
+<div class="hero-slider" id="heroSlider">
+    <div class="hero-slider-container" id="sliderContainer">
+        <div class="slider-loading" id="sliderLoading">
+            <div class="spinner-custom"></div>
+            <p>Loading slider images...</p>
+        </div>
+    </div>
+    <button class="slider-nav-btn slider-nav-prev" id="sliderPrev">‹</button>
+    <button class="slider-nav-btn slider-nav-next" id="sliderNext">›</button>
+    <div class="slider-dots" id="sliderDots"></div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section id="about" class="section-hidden">
+    <h3>About Krish Model School</h3>
+    <div id="aboutContent">
+        <div class="text-center py-4"><div class="spinner-custom" style="width:40px; height:40px;"></div><p>Loading...</p></div>
+    </div>
+    <div class="values-grid">
+        <div class="value-item"><i class="fas fa-chalkboard-user"></i><strong>Quality Teaching</strong><p>Experienced faculty & smart classes</p></div>
+        <div class="value-item"><i class="fas fa-hand-sparkles"></i><strong>Discipline</strong><p>Values & character building</p></div>
+        <div class="value-item"><i class="fas fa-trophy"></i><strong>Excellence</strong><p>Consistent academic results</p></div>
+        <div class="value-item"><i class="fas fa-heart"></i><strong>Care</strong><p>Safe & nurturing environment</p></div>
+    </div>
+</section>
+
+<!-- COUNTERS -->
+<section class="counter-section section-hidden">
+    <div class="counter-grid">
+        <div class="counter-item"><h4 id="studentsCount" data-target="920">0+</h4><p>Students</p></div>
+        <div class="counter-item"><h4 id="teachersCount" data-target="48">0+</h4><p>Teachers</p></div>
+        <div class="counter-item"><h4 id="successCount" data-target="98">0%</h4><p>Success Rate</p></div>
+        <div class="counter-item"><h4 id="yearsCount" data-target="28">0+</h4><p>Years Legacy</p></div>
+    </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+    <h3>📅 Upcoming Events</h3>
+    <div><input type="text" id="eventSearch" class="form-control mb-4" placeholder="🔍 Search events..."></div>
+    <div id="eventCardGrid" class="event-card-grid">Loading...</div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership" class="section-hidden">
+    <h3>👑 Leadership</h3>
+    <div class="staff-grid">
+        <div class="staff-card">
+            <img src="principal_image.jpg" alt="Principal">
+            <h4>Krishana Kumar Sah</h4>
+            <p style="color:#8B0000; font-weight:bold">Principal</p>
+            <p>"At Krish Model School, we ignite curiosity and empower every child to become a lifelong learner. Join our family to experience transformative education."</p>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+    <h3>📸 School Gallery</h3>
+    <div class="gallery-tabs">
+        <div class="gallery-tab active" data-filter="all">All</div>
+        <div class="gallery-tab" data-filter="tour">Tour</div>
+        <div class="gallery-tab" data-filter="extracurricular">Activities</div>
+        <div class="gallery-tab" data-filter="picnic">Picnic</div>
+        <div class="gallery-tab" data-filter="sports">Sports</div>
+        <div class="gallery-tab" data-filter="culture">Culture</div>
+    </div>
+    <div id="galleryGrid"></div>
+    <button class="gallery-btn" id="loadMoreBtn">Load More Images</button>
+</section>
+
+<!-- PERFORMANCE CHART -->
+<section class="section-hidden">
+    <h3>📊 Performance Analytics</h3>
+    <div class="chart-container"><canvas id="performanceChart"></canvas></div>
+    <div>
+        <button class="chart-btn active" data-chart="bar">Bar</button>
+        <button class="chart-btn" data-chart="line">Line</button>
+        <button class="chart-btn" data-chart="pie">Pie</button>
+    </div>
+</section>
+
+<!-- ADMISSIONS -->
+<section id="admissions">
+    <h3>📌 Admissions Open 2025</h3>
+    <div class="admission-section-content">
+        <div class="admission-info-left">
+            <h4>🏫 Join Krish Model School</h4>
+            <ul>
+                <li>✅ 28+ years of excellence</li>
+                <li>✅ Modern labs & library</li>
+                <li>✅ Scholarship for meritorious</li>
+                <li>✅ Sports & extracurricular focus</li>
+            </ul>
+            <p><strong>Age Criteria:</strong> Nursery (3+) | LKG (4+) | UKG (5+) | Grade 1 (6+)</p>
+            <div><button class="apply-btn" id="openAdmissionFormBtn">Apply Now →</button></div>
+        </div>
+        <div class="admission-image-right">
+            <img src="Gemini_Generated_Image_j4vyumj4vyumj4vy.png" alt="Admission">
+        </div>
+    </div>
+    <div id="admissionFormWrapper">
+        <div style="background:#fff8f3; border-radius:30px; padding:25px">
+            <button class="close-form-btn" onclick="toggleAdmissionForm()">✕ Close</button>
+            <h4 class="text-center">Enquiry Form</h4>
+            <form id="enrollmentForm">
+                <div class="mb-3"><label>Student Name *</label><input type="text" id="studentName" class="form-control" required></div>
+                <div class="mb-3"><label>Photo</label><div class="upload-field" onclick="document.getElementById('studentPhoto').click()"><i class="fas fa-camera"></i> <span id="fileNameDisplay">Click to upload</span><input type="file" id="studentPhoto" hidden accept="image/*"></div></div>
+                <div class="mb-3"><label>Gender</label><div><label><input type="radio" name="gender" value="Male" checked> Male</label> <label><input type="radio" name="gender" value="Female"> Female</label></div></div>
+                <div class="mb-3"><label>Parent Name *</label><input type="text" id="parentName" class="form-control" required></div>
+                <div class="mb-3"><label>Email *</label><input type="email" id="parentEmail" class="form-control" required></div>
+                <div class="mb-3"><label>Phone *</label><input type="tel" id="phone" class="form-control" required></div>
+                <div class="mb-3"><label>Class Applying *</label><select id="studentClass" class="form-control"><option>Nursery</option><option>LKG</option><option>UKG</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option></select></div>
+                <div class="mb-3"><label>Message</label><textarea id="message" class="form-control" rows="2"></textarea></div>
+                <button type="submit" class="admission-submit-btn">Submit Inquiry</button>
+                <div id="responseMessage" class="mt-3"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+    <div class="footer-grid">
+        <div><h4>Quick Links</h4><ul><li><a href="#" style="color:#f5e6dc">Home</a></li><li><a href="#about" style="color:#f5e6dc">About</a></li><li><a href="#admissions" style="color:#f5e6dc">Admissions</a></li></ul></div>
+        <div><h4>Krish Model School</h4><p>Kamala Mun.-03, Lagma, Dhanusha</p><div class="social-icons-side"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-whatsapp"></i></a></div></div>
+        <div><h4>Contact</h4><p><i class="fas fa-phone"></i> +977 9824863245</p><p><i class="fas fa-envelope"></i> info@krishmodel.edu</p></div>
+        <div><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3568.123!2d85.8942!3d26.9907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ec730c26f36c9f%3A0xc3d2f9a403167469!2sEverest%20Public%20School!5e0!3m2!1sen!2snp!4v1715000000000!5m2!1sen!2snp" width="100%" height="140" style="border-radius:16px;"></iframe></div>
+    </div>
+    <div class="text-center mt-4"><p>© 2025 Krish Model School | All Rights Reserved</p></div>
+</footer>
+
+<!-- Floating Elements -->
+<button id="translatorBtn">🌐</button>
+<div id="currentLanguage">🌍 English</div>
+<div id="scrollTopBtn">↑</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+    <span class="close-lightbox">×</span>
+    <div class="lightbox-nav">
+        <button class="lightbox-nav-btn prev-lightbox">‹</button>
+        <button class="lightbox-nav-btn next-lightbox">›</button>
+    </div>
+    <img id="lightbox-img" src="">
+</div>
+
+<script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCrjNBk9v3s_IGG-R9gZBWqLm9qJUbfjE4",
+        authDomain: "everest-public-school.firebaseapp.com",
+        databaseURL: "https://everest-public-school-default-rtdb.firebaseio.com",
+        projectId: "everest-public-school",
+        storageBucket: "everest-public-school.firebasestorage.app",
+        messagingSenderId: "598969496568",
+        appId: "1:598969496568:web:7c694d9d3153f8f07e9c0d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Global Variables
+    let allGalleryImages = [];
+    let currentPage = 1;
+    const ITEMS_PER_PAGE = 9;
+    let currentFilter = 'all';
+    let currentLightboxIndex = 0;
+    let currentLightboxImages = [];
+    let chart = null;
+    let allSliderImages = [];
+    let sliderInterval = null;
+    let currentSlideIndex = 0;
+
+    // Header Functions
+    function updateHeaderSpacer() {
+        const header = document.querySelector('.fixed-header');
+        const spacer = document.getElementById('headerSpacer');
+        if (header && spacer) spacer.style.height = header.offsetHeight + 'px';
+    }
+    
+    function handleHeaderScroll() {
+        const mainHeader = document.getElementById('mainHeader');
+        if (window.scrollY > 50) mainHeader.classList.add('shrink');
+        else mainHeader.classList.remove('shrink');
+        updateHeaderSpacer();
+    }
+
+    // Welcome Lightbox
+    const welcomeBox = document.getElementById('welcomeLightbox');
+    welcomeBox.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    document.getElementById('closeWelcomeBtn').onclick = () => { 
+        welcomeBox.style.display = 'none'; 
+        document.body.style.overflow = 'auto';
+        updateHeaderSpacer();
+    };
+    setTimeout(() => { 
+        if(welcomeBox.style.display === 'flex') { 
+            welcomeBox.style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+            updateHeaderSpacer();
+        } 
+    }, 8000);
+
+    // ==================== SLIDER FUNCTIONS ====================
+    function loadSliderImages() {
+        db.ref('slider_images').once('value').then(snapshot => {
+            const loading = document.getElementById('sliderLoading');
+            if (snapshot.exists()) {
+                allSliderImages = [];
+                const data = snapshot.val();
+                Object.keys(data).forEach(key => {
+                    allSliderImages.push({ id: key, url: data[key].url, title: data[key].title, order: data[key].order || 0 });
+                });
+                allSliderImages.sort((a,b) => a.order - b.order);
+            } else {
+                // Default fallback images
+                allSliderImages = [
+                    { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome" },
+                    { url: "https://placehold.co/1920x800/5C0000/white?text=Quality+Education", title: "Quality Education" },
+                    { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open", title: "Admissions Open" }
+                ];
+            }
+            
+            if (loading) loading.style.display = 'none';
+            renderSlider();
+        }).catch(err => {
+            console.error("Slider error:", err);
+            document.getElementById('sliderLoading').style.display = 'none';
+            allSliderImages = [
+                { url: "https://placehold.co/1920x800/8B0000/white?text=Welcome+to+Krish+Model+School", title: "Welcome" },
+                { url: "https://placehold.co/1920x800/5C0000/white?text=Quality+Education", title: "Quality Education" },
+                { url: "https://placehold.co/1920x800/8B0000/white?text=Admissions+Open", title: "Admissions Open" }
+            ];
+            renderSlider();
+        });
+    }
+
+    function renderSlider() {
+        const container = document.getElementById('sliderContainer');
+        const dotsContainer = document.getElementById('sliderDots');
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        
+        if (allSliderImages.length === 0) {
+            container.innerHTML = '<div class="slider-loading"><div class="spinner-custom"></div><p>No images found</p></div>';
+            return;
+        }
+        
+        allSliderImages.forEach((img, idx) => {
+            const slide = document.createElement('div');
+            slide.className = 'hero-slide';
+            if (idx === 0) slide.classList.add('active');
+            
+            const imgEl = document.createElement('img');
+            imgEl.src = img.url;
+            imgEl.alt = img.title || 'School Image';
+            imgEl.onerror = function() { 
+                this.src = 'https://placehold.co/1920x800/8B0000/white?text=Image+Not+Found';
+            };
+            imgEl.onclick = () => openLightbox(img.url);
+            
+            slide.appendChild(imgEl);
+            container.appendChild(slide);
+            
+            const dot = document.createElement('div');
+            dot.className = 'slider-dot';
+            if (idx === 0) dot.classList.add('active');
+            dot.onclick = () => goToSlide(idx);
+            dotsContainer.appendChild(dot);
+        });
+        
+        setupSliderControls();
+        startAutoSlide();
+        updateLightboxImagesList();
+    }
+    
+    function setupSliderControls() {
+        const prevBtn = document.getElementById('sliderPrev');
+        const nextBtn = document.getElementById('sliderNext');
+        
+        const newPrev = prevBtn.cloneNode(true);
+        const newNext = nextBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+        nextBtn.parentNode.replaceChild(newNext, nextBtn);
+        
+        newPrev.onclick = () => {
+            stopAutoSlide();
+            currentSlideIndex = (currentSlideIndex - 1 + allSliderImages.length) % allSliderImages.length;
+            showSlide(currentSlideIndex);
+            startAutoSlide();
+        };
+        
+        newNext.onclick = () => {
+            stopAutoSlide();
+            currentSlideIndex = (currentSlideIndex + 1) % allSliderImages.length;
+            showSlide(currentSlideIndex);
+            startAutoSlide();
+        };
+    }
+    
+    function showSlide(index) {
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        
+        currentSlideIndex = index;
+        updateLightboxImagesList();
+    }
+    
+    function goToSlide(index) {
+        stopAutoSlide();
+        showSlide(index);
+        startAutoSlide();
+    }
+    
+    function startAutoSlide() {
+        if (sliderInterval) clearInterval(sliderInterval);
+        sliderInterval = setInterval(() => {
+            currentSlideIndex = (currentSlideIndex + 1) % allSliderImages.length;
+            showSlide(currentSlideIndex);
+        }, 5000);
+    }
+    
+    function stopAutoSlide() {
+        if (sliderInterval) {
+            clearInterval(sliderInterval);
+            sliderInterval = null;
+        }
+    }
+    
+    function updateLightboxImagesList() {
+        const slides = document.querySelectorAll('.hero-slide img');
+        currentLightboxImages = Array.from(slides).map(img => img.src);
+    }
+    
+    function listenForSliderUpdates() {
+        db.ref('slider_images').on('value', () => {
+            loadSliderImages();
+        });
+    }
+
+    // ==================== LIGHTBOX ====================
+    function openLightbox(src) {
+        const allImages = [...document.querySelectorAll('.hero-slide img, .gallery-img')];
+        currentLightboxImages = allImages.map(img => img.src);
+        currentLightboxIndex = currentLightboxImages.indexOf(src);
+        if (currentLightboxIndex === -1) currentLightboxIndex = 0;
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    function navigateLightbox(direction) {
+        if (direction === 'next') {
+            currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxImages.length;
+        } else {
+            currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxImages.length) % currentLightboxImages.length;
+        }
+        document.getElementById('lightbox-img').src = currentLightboxImages[currentLightboxIndex];
+    }
+
+    // ==================== ABOUT CONTENT ====================
+    function loadAboutContent() {
+        db.ref('about_section').once('value').then(snapshot => {
+            const container = document.getElementById('aboutContent');
+            if (snapshot.exists() && snapshot.val().content) {
+                container.innerHTML = snapshot.val().content;
+            } else {
+                container.innerHTML = `
+                    <p style="font-size:1.1rem">Krish Model School, located in Kamala Municipality-03, Lagma (Dhanusha), is a beacon of quality education in the region.</p>
+                    <p><strong>🏆 Our Mission:</strong> To empower every student with knowledge, discipline, and life skills to excel in a competitive world.</p>
+                    <p><strong>🌟 Our Vision:</strong> To be a premier institution shaping generations through innovation, integrity, and inclusive education.</p>
+                `;
+            }
+        });
+    }
+
+    // ==================== EVENTS ====================
+    function loadEvents() {
+        db.ref('school_events').orderByChild('date').once('value').then(snapshot => {
+            const grid = document.getElementById('eventCardGrid');
+            if (snapshot.exists()) {
+                let eventsHtml = '';
+                const events = snapshot.val();
+                Object.keys(events).forEach(key => {
+                    const event = events[key];
+                    if (event.isActive === true) {
+                        const date = new Date(event.date);
+                        eventsHtml += `
+                            <div class="event-item">
+                                <div class="event-date">${date.toLocaleString('default', { month: 'short' })}<span>${date.getDate()}</span></div>
+                                <div><strong>${event.title}</strong><p>${event.description || ''}</p></div>
+                            </div>
+                        `;
+                    }
+                });
+                grid.innerHTML = eventsHtml || '<p class="text-center">No upcoming events</p>';
+            } else {
+                grid.innerHTML = '<p class="text-center">No events scheduled</p>';
+            }
+        });
+    }
+    
+    function filterEvents() {
+        const search = document.getElementById('eventSearch').value.toLowerCase();
+        const items = document.querySelectorAll('.event-item');
+        items.forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes(search) ? 'flex' : 'none';
+        });
+    }
+
+    // ==================== GALLERY ====================
+    function loadGalleryImages() {
+        db.ref('image_gallery').once('value').then(snapshot => {
+            if (snapshot.exists()) {
+                allGalleryImages = [];
+                const gallery = snapshot.val();
+                Object.keys(gallery).forEach(key => {
+                    allGalleryImages.push({ id: key, url: gallery[key].url, title: gallery[key].title, category: gallery[key].category });
+                });
+                allGalleryImages.sort((a, b) => (b.uploadedAt || 0) - (a.uploadedAt || 0));
+            }
+            renderGallery();
+        });
+    }
+    
+    function renderGallery() {
+        let filtered = currentFilter === 'all' ? allGalleryImages : allGalleryImages.filter(img => img.category === currentFilter);
+        const start = (currentPage - 1) * ITEMS_PER_PAGE;
+        const toShow = filtered.slice(start, start + ITEMS_PER_PAGE);
+        const grid = document.getElementById('galleryGrid');
+        
+        if (currentPage === 1) grid.innerHTML = '';
+        
+        if (toShow.length === 0 && currentPage === 1) {
+            grid.innerHTML = '<div class="text-center py-5 col-12"><i class="fas fa-images fa-3x text-muted mb-3"></i><p>No images found</p></div>';
+            return;
+        }
+        
+        toShow.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = `<img src="${item.url}" alt="${item.title || 'Gallery'}" class="gallery-img" loading="lazy">`;
+            div.onclick = () => openLightbox(item.url);
+            grid.appendChild(div);
+        });
+        
+        const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+        const btn = document.getElementById('loadMoreBtn');
+        if (currentPage >= totalPages || totalPages === 0) {
+            btn.style.display = 'none';
+        } else {
+            btn.style.display = 'block';
+            btn.onclick = () => { currentPage++; renderGallery(); };
+        }
+    }
+    
+    function filterGallery(filter) {
+        currentFilter = filter;
+        currentPage = 1;
+        renderGallery();
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.filter === filter) tab.classList.add('active');
+        });
+    }
+
+    // ==================== COUNTERS ====================
+    function animateCounters() {
+        const counters = document.querySelectorAll('.counter-item h4');
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                counters.forEach(counter => {
+                    const target = parseInt(counter.dataset.target);
+                    let current = 0;
+                    const increment = target / 80;
+                    const update = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current) + (counter.id === 'successCount' ? '%' : '+');
+                            requestAnimationFrame(update);
+                        } else {
+                            counter.innerText = target + (counter.id === 'successCount' ? '%' : '+');
+                        }
+                    };
+                    update();
+                });
+                observer.disconnect();
+            }
+        }, { threshold: 0.5 });
+        observer.observe(document.querySelector('.counter-section'));
+    }
+
+    // ==================== CHART ====================
+    function initChart() {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: [2021, 2022, 2023, 2024, 2025], datasets: [{ label: 'Pass %', data: [93, 95, 96, 97.5, 98], backgroundColor: '#8B0000', borderColor: '#DAA520', borderWidth: 2 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+    }
+    
+    function changeChartType(type) {
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: type,
+            data: { labels: [2021, 2022, 2023, 2024, 2025], datasets: [{ label: 'Pass %', data: [93, 95, 96, 97.5, 98], backgroundColor: '#8B0000', borderColor: '#DAA520' }] },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // ==================== ADMISSION FORM ====================
+    window.toggleAdmissionForm = () => document.getElementById('admissionFormWrapper').classList.toggle('open');
+    document.getElementById('openAdmissionFormBtn')?.addEventListener('click', toggleAdmissionForm);
+    
+    document.getElementById('enrollmentForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerText = 'Sending...';
+        try {
+            await db.ref('student_inquiries').push({
+                studentName: document.getElementById('studentName').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                parentName: document.getElementById('parentName').value,
+                parentEmail: document.getElementById('parentEmail').value,
+                phone: document.getElementById('phone').value,
+                studentClass: document.getElementById('studentClass').value,
+                message: document.getElementById('message').value,
+                timestamp: Date.now(),
+                status: 'New'
+            });
+            document.getElementById('responseMessage').innerHTML = '<div class="alert alert-success mt-3">✅ Application submitted successfully!</div>';
+            e.target.reset();
+            document.getElementById('fileNameDisplay').innerText = 'Click to upload';
+            setTimeout(() => document.getElementById('responseMessage').innerHTML = '', 5000);
+        } catch (err) {
+            document.getElementById('responseMessage').innerHTML = '<div class="alert alert-danger mt-3">❌ Error submitting form</div>';
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'Submit Inquiry';
+        }
+    });
+    
+    function updateFileName(input) {
+        if (input.files.length) document.getElementById('fileNameDisplay').innerText = input.files[0].name;
+    }
+    document.getElementById('studentPhoto')?.addEventListener('change', function() { updateFileName(this); });
+
+    // ==================== SCROLL ====================
+    function setupScrollAnimations() {
+        const sections = document.querySelectorAll('.section-hidden');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('section-visible');
+            });
+        }, { threshold: 0.1 });
+        sections.forEach(section => observer.observe(section));
+    }
+
+    const scrollBtn = document.getElementById('scrollTopBtn');
+    window.onscroll = () => {
+        scrollBtn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+        handleHeaderScroll();
+    };
+    scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // ==================== INITIALIZE ====================
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSliderImages();
+        listenForSliderUpdates();
+        loadAboutContent();
+        loadEvents();
+        loadGalleryImages();
+        animateCounters();
+        initChart();
+        setupScrollAnimations();
+        
+        document.getElementById('eventSearch')?.addEventListener('keyup', filterEvents);
+        document.querySelectorAll('.gallery-tab').forEach(tab => {
+            tab.onclick = () => filterGallery(tab.dataset.filter);
+        });
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                changeChartType(btn.dataset.chart);
+            };
+        });
+        
+        document.querySelector('.close-lightbox')?.addEventListener('click', closeLightbox);
+        document.getElementById('lightbox')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightbox')) closeLightbox();
+        });
+        document.querySelector('.prev-lightbox')?.addEventListener('click', () => navigateLightbox('prev'));
+        document.querySelector('.next-lightbox')?.addEventListener('click', () => navigateLightbox('next'));
+        
+        window.addEventListener('load', updateHeaderSpacer);
+        window.addEventListener('resize', updateHeaderSpacer);
+        setTimeout(updateHeaderSpacer, 100);
+        
+        document.getElementById('translatorBtn').onclick = () => alert("🌐 Language options available in browser settings");
+    });
+</script>
+</body>
+</html>
